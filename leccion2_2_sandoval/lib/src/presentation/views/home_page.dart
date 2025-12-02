@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../viewmodels/pokemon_viewmodel.dart';
+import '../viewmodels/product_viewmodel.dart';
+import '../widgets/search_filter_widget.dart';
+import '../widgets/product_grid_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,41 +13,36 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  // controllers moved into widgets
+
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        Provider.of<PokemonViewModel>(context, listen: false).loadPokemons()
-    );
+    Future.microtask(() => Provider.of<ProductViewModel>(context, listen: false).loadInitial());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final vm = Provider.of<PokemonViewModel>(context);
-
-    if (vm.loading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
+    final vm = Provider.of<ProductViewModel>(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text("PokéAPI - MVVM + Provider")),
-      body: ListView.builder(
-        itemCount: vm.pokemons.length,
-        itemBuilder: (_, index) {
-          final p = vm.pokemons[index];
-
-          return ListTile(
-            leading: Image.network(p.imageUrl),
-            title: Text(p.name.toUpperCase()),
-            subtitle: Text("ID: ${p.id}"),
-            onTap: () {
-              Navigator.pushNamed(context, "/detalle", arguments: p);
-            },
-          );
-        },
+      appBar: AppBar(
+        title: const Text('FakeStore - Productos'),
+        actions: [
+          IconButton(
+            onPressed: () => vm.refresh(),
+            icon: const Icon(Icons.refresh),
+          ),
+        ],
+        bottom: const SearchFilterWidget(),
       ),
+      body: const ProductGridWidget(),
     );
   }
 }
