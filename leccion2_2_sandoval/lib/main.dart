@@ -15,17 +15,21 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  final GetProductsUseCase usecase;
-  final ProductRepositoryImpl repository;
+  final GetProductsUseCase? usecase;
+  final ProductRepositoryImpl? repository;
 
-  const MyApp({super.key, required this.usecase, required this.repository});
+  const MyApp({super.key, this.usecase, this.repository});
 
   @override
   Widget build(BuildContext context) {
+    final _datasource = repository == null ? FakeStoreDataSource() : repository!.datasource;
+    final _repository = repository ?? ProductRepositoryImpl(_datasource);
+    final _usecase = usecase ?? GetProductsUseCase(_repository);
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => ProductViewModel(usecase, repository),
+          create: (_) => ProductViewModel(_usecase, _repository),
         ),
       ],
       child: MaterialApp(

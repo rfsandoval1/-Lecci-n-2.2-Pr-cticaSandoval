@@ -47,7 +47,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
             value: vm.selectedCategory,
             items: [
               const DropdownMenuItem(value: null, child: Text('Todas')),
-              ...vm.categories.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList()
+              ...vm.categories.map((c) => DropdownMenuItem(value: c, child: Text(c)))
             ],
             onChanged: (v) => vm.applyCategory(v),
           ),

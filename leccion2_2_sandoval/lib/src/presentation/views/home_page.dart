@@ -18,7 +18,9 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => Provider.of<ProductViewModel>(context, listen: false).loadInitial());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ProductViewModel>(context, listen: false).loadInitial();
+    });
   }
 
   @override
